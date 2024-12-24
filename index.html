@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balon Patlatma Oyunu</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background: #3d3e40;
+        }
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        .scoreboard {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        .game-over {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="scoreboard">Puan: <span id="score">0</span></div>
+    <div class="game-over" id="gameOver">
+        <h1>Oyun Bitti!</h1>
+        <p>Toplam Puan: <span id="finalScore">0</span></p>
+        <button onclick="startGame()">Tekrar Oyna</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let gameInterval;
+        let gameDuration = 30; // Oyun süresi (saniye)
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        function randomPosition() {
+            const x = Math.random() * (screenWidth - 50); // Balon genişliğini çıkartıyoruz
+            const y = Math.random() * (screenHeight - 70); // Balon yüksekliğini çıkartıyoruz
+            return { x, y };
+        }
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            const { x, y } = randomPosition();
+            balloon.style.left = `${x}px`;
+            balloon.style.top = `${y}px`;
+
+            balloon.addEventListener('click', () => {
+                score++;
+                document.getElementById('score').textContent = score;
+                balloon.remove();
+            });
+
+            document.body.appendChild(balloon);
+
+            // 2 saniye sonra otomatik kaybolur
+            setTimeout(() => {
+                if (document.body.contains(balloon)) {
+                    balloon.remove();
+                }
+            }, 600);
+        }
+
+        function startGame() {
+            score = 0;
+            document.getElementById('score').textContent = score;
+            document.getElementById('gameOver').style.display = 'none';
+
+            // Her 0.3 saniyede bir balon oluştur
+            gameInterval = setInterval(createBalloon, 300);
+
+            // Oyun süresi dolduğunda bitir
+            setTimeout(() => {
+                clearInterval(gameInterval);
+                document.getElementById('finalScore').textContent = score;
+                document.getElementById('gameOver').style.display = 'block';
+            }, gameDuration * 1000);
+        }
+
+        // Oyunu başlat
+        startGame();
+    </script>
+</body>
+</html>
