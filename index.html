@@ -31,6 +31,16 @@
             border-radius: 5px;
             font-size: 18px;
         }
+        .high-scores {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
         .game-over {
             position: fixed;
             top: 50%;
@@ -47,9 +57,11 @@
 </head>
 <body>
     <div class="scoreboard">Puan: <span id="score">0</span></div>
+    <div class="high-scores">En Yüksek Puan: <span id="highScore">0</span></div>
     <div class="game-over" id="gameOver">
         <h1>Oyun Bitti!</h1>
         <p>Toplam Puan: <span id="finalScore">0</span></p>
+        <p>En Yüksek Puan: <span id="finalHighScore">0</span></p>
         <button onclick="startGame()">Tekrar Oyna</button>
     </div>
 
@@ -89,10 +101,24 @@
             }, 600);
         }
 
+        function updateHighScore() {
+            const highScore = localStorage.getItem('highScore') || 0;
+            if (score > highScore) {
+                localStorage.setItem('highScore', score);
+            }
+            return Math.max(score, highScore);
+        }
+
+        function displayHighScore() {
+            const highScore = localStorage.getItem('highScore') || 0;
+            document.getElementById('highScore').textContent = highScore;
+        }
+
         function startGame() {
             score = 0;
             document.getElementById('score').textContent = score;
             document.getElementById('gameOver').style.display = 'none';
+            displayHighScore();
 
             // Her 0.3 saniyede bir balon oluştur
             gameInterval = setInterval(createBalloon, 300);
@@ -100,13 +126,17 @@
             // Oyun süresi dolduğunda bitir
             setTimeout(() => {
                 clearInterval(gameInterval);
+                const highScore = updateHighScore();
                 document.getElementById('finalScore').textContent = score;
+                document.getElementById('finalHighScore').textContent = highScore;
                 document.getElementById('gameOver').style.display = 'block';
+                displayHighScore();
             }, gameDuration * 1000);
         }
 
         // Oyunu başlat
         startGame();
+        displayHighScore();
     </script>
 </body>
 </html>
