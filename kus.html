@@ -102,9 +102,9 @@
 
         // Oyun ayarları
         const birdSpeed = 3;
-        let birdY = gameContainer.offsetHeight / 2; // Kuş başlangıç yüksekliği
+        let birdY = gameContainer.offsetHeight / 4; // Kuş başlangıç yüksekliği
         const gravity = 0.3;
-        const jumpStrength = -8; // Zıplama gücü biraz azaltıldı
+        const jumpStrength = -8.002;
         let birdVelocity = 0;
 
         let score = 0;
@@ -114,7 +114,7 @@
         // Engel ayarları
         const obstacleSpeed = 3;
         const obstacleWidth = 20;
-        const obstacleGap = 100;
+        const obstacleGap = 110;
         const obstacleFrequency = 2000; // Her 2 saniyede bir yeni engel eklenir
 
         // Bulut ayarları
@@ -133,6 +133,12 @@
             if (e.key === " " || e.key === "ArrowUp") {
                 birdVelocity = jumpStrength; // Kuşu yukarı zıplat
             }
+     
+
+        });
+         // Mouse tıklama ile zıplama
+         window.addEventListener("click", () => {
+            birdVelocity = jumpStrength; // Kuşu yukarı zıplat
         });
 
         // Engel ekleme fonksiyonu
